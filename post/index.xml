@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Akii</title><link>https://blog.akii.art/post/</link><description>Recent content in Posts on Akii</description><generator>Hugo -- gohugo.io</generator><language>zh-Hans</language><lastBuildDate>Fri, 26 Mar 2021 17:54:11 +0800</lastBuildDate><atom:link href="https://blog.akii.art/post/index.xml" rel="self" type="application/rss+xml"/><item><title>CJK 用户们的 Fontconfig</title><link>https://blog.akii.art/p/fontconfig-for-cjk/</link><pubDate>Fri, 26 Mar 2021 17:54:11 +0800</pubDate><guid>https://blog.akii.art/p/fontconfig-for-cjk/</guid><description>起因 由于汉字在东亚地区的广泛使用，以及各个地区的文化发展，同一个汉字可能在不同的地区有着不同字形。
+在没有配置 Fontconfig 的情况下，可能会出现简体中文的汉字错误的显示为了日语汉字字形的问题。
+这个问题在 Windows 下近乎无解。但是在 Linux 下，我们可以自由的配置 Fontconfig 在系统层面几乎完美的解决这个问题。
+需求 我个人的需求是，拉丁字符使用特定的字体。而 CJK 字符则按照语言选择所需的字形。
+于是要优先使用拉丁字体。如果某个字符不在其中，则使用后备的 CJK 字体。
+字体 在这里，我使用了以下这些字体来进行配置。当然，你也可以选择你喜欢的字体。
+Charset Serif Sans Mono Latin PT Serif Roboto Cascadia Code CJK Noto Serif CJK Noto Sans CJK Noto Sans Mono CJK 还有 Noto Color Emoji 作为 Emoji 字体。
+配置 由于完整配置太长，为了文章的简洁，我只简单介绍每一个文件是如何配置的，以便于各位使用时按需自定义。
+完整配置储存在 Gist &amp;gt; Customize Fontconfig 。
+拉丁字符 52-latin.</description></item><item><title>Hello, Hugo!</title><link>https://blog.akii.art/p/hello-hugo/</link><pubDate>Fri, 26 Mar 2021 15:04:08 +0800</pubDate><guid>https://blog.akii.art/p/hello-hugo/</guid><description>多年之前曾经创建过一个小站，不过因为种种原因荒废掉了。
+域名也因为没有续费被回收。（随后被人注册，成了一个奇奇怪怪的广告站）
+并且所有数据都在我某次清理时全部删除了。
+最近热血来潮又重新创建这个小站。
+打算记录一些笔记什么的，除了这些，我这个「真・潜水党」也没啥别的好写了。
+不过也没人看就对了～ 😅
+最后。你好，Hugo！</description></item></channel></rss>

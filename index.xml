@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Akii</title><link>https://blog.akii.art/</link><description>Recent content on Akii</description><generator>Hugo -- gohugo.io</generator><language>zh-Hans</language><lastBuildDate>Fri, 26 Mar 2021 17:54:11 +0800</lastBuildDate><atom:link href="https://blog.akii.art/index.xml" rel="self" type="application/rss+xml"/><item><title>CJK 用户们的 Fontconfig</title><link>https://blog.akii.art/p/fontconfig-for-cjk/</link><pubDate>Fri, 26 Mar 2021 17:54:11 +0800</pubDate><guid>https://blog.akii.art/p/fontconfig-for-cjk/</guid><description>&lt;img src="https://blog.akii.art/p/fontconfig-for-cjk/cover.png" alt="Featured image of post CJK 用户们的 Fontconfig" />&lt;h2 id="起因">起因&lt;/h2>
+&lt;p>由于汉字在东亚地区的广泛使用，以及各个地区的文化发展，同一个汉字可能在不同的地区有着不同字形。&lt;/p>
+&lt;p>在没有配置 Fontconfig 的情况下，可能会出现简体中文的汉字错误的显示为了日语汉字字形的问题。&lt;/p>
+&lt;p>这个问题在 Windows 下近乎无解。但是在 Linux 下，我们可以自由的配置 Fontconfig 在系统层面几乎完美的解决这个问题。&lt;/p>
+&lt;h2 id="需求">需求&lt;/h2>
+&lt;p>我个人的需求是，拉丁字符使用特定的字体。而 CJK 字符则按照语言选择所需的字形。&lt;/p>
+&lt;p>于是要优先使用拉丁字体。如果某个字符不在其中，则使用后备的 CJK 字体。&lt;/p>
+&lt;h2 id="字体">字体&lt;/h2>
+&lt;p>在这里，我使用了以下这些字体来进行配置。当然，你也可以选择你喜欢的字体。&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">Charset&lt;/th>
+&lt;th style="text-align:center">Serif&lt;/th>
+&lt;th style="text-align:center">Sans&lt;/th>
+&lt;th style="text-align:center">Mono&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">Latin&lt;/td>
+&lt;td style="text-align:center">PT Serif&lt;/td>
+&lt;td style="text-align:center">Roboto&lt;/td>
+&lt;td style="text-align:center">Cascadia Code&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">CJK&lt;/td>
+&lt;td style="text-align:center">Noto Serif CJK&lt;/td>
+&lt;td style="text-align:center">Noto Sans CJK&lt;/td>
+&lt;td style="text-align:center">Noto Sans Mono CJK&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>还有 Noto Color Emoji 作为 Emoji 字体。&lt;/p>
+&lt;h2 id="配置">配置&lt;/h2>
+&lt;p>由于完整配置太长，为了文章的简洁，我只简单介绍每一个文件是如何配置的，以便于各位使用时按需自定义。&lt;/p>
+&lt;p>完整配置储存在 &lt;a class="link" href="https://gist.github.com/akiirui/b3f36e8bdf9a9f5636a98113960bc7f4" target="_blank" rel="noopener"
+>Gist &amp;gt; Customize Fontconfig&lt;/a> 。&lt;/p>
+&lt;h3 id="拉丁字符-52-latinconf">拉丁字符 &lt;code>52-latin.conf&lt;/code>&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-xml" data-lang="xml">&lt;span class="nt">&amp;lt;alias&lt;/span> &lt;span class="na">binding=&lt;/span>&lt;span class="s">&amp;#34;strong&amp;#34;&lt;/span>&lt;span class="nt">&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;family&amp;gt;&lt;/span>serif&lt;span class="nt">&amp;lt;/family&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;prefer&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;family&amp;gt;&lt;/span>PT Serif&lt;span class="nt">&amp;lt;/family&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/prefer&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/alias&amp;gt;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>在拉丁字符部分，使用 &lt;code>alias&lt;/code> &amp;amp; &lt;code>prefer&lt;/code> 使所需的字体成为第一个匹配项。&lt;/p>
+&lt;p>&lt;code>binding=&amp;quot;strong&amp;quot;&lt;/code> 是为了使这条规则不会被顺序更靠后的配置文件给覆盖。&lt;/p>
+&lt;p>&lt;code>family&lt;/code> 的值则按照需要更改为 &lt;code>sans-serif&lt;/code> &lt;code>monospace&lt;/code> &lt;code>system-ui&lt;/code> 。&lt;/p>
+&lt;h3 id="cjk-字符-53-cjkconf">CJK 字符 &lt;code>53-cjk.conf&lt;/code>&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-xml" data-lang="xml">&lt;span class="nt">&amp;lt;match&lt;/span> &lt;span class="na">target=&lt;/span>&lt;span class="s">&amp;#34;pattern&amp;#34;&lt;/span>&lt;span class="nt">&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;test&lt;/span> &lt;span class="na">name=&lt;/span>&lt;span class="s">&amp;#34;family&amp;#34;&lt;/span>&lt;span class="nt">&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;string&amp;gt;&lt;/span>serif&lt;span class="nt">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/test&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;edit&lt;/span> &lt;span class="na">name=&lt;/span>&lt;span class="s">&amp;#34;family&amp;#34;&lt;/span> &lt;span class="na">mode=&lt;/span>&lt;span class="s">&amp;#34;append&amp;#34;&lt;/span> &lt;span class="na">binding=&lt;/span>&lt;span class="s">&amp;#34;strong&amp;#34;&lt;/span>&lt;span class="nt">&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;string&amp;gt;&lt;/span>Noto Serif CJK SC&lt;span class="nt">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/edit&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/match&amp;gt;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>在 CJK 字符部分，使用 &lt;code>match&lt;/code> &amp;amp; &lt;code>test&lt;/code> 匹配字体家族，然后用 &lt;code>edit mode=&amp;quot;append&amp;quot;&lt;/code> 使所需的字体成为紧随拉丁字体的后备字体。&lt;/p>
+&lt;p>这一条规则是当没有提供 &lt;code>lang&lt;/code> 属性的时候的默认值，按需更改字形变体。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-xml" data-lang="xml">&lt;span class="c">&amp;lt;!-- &amp;#34;lang=zh-hant&amp;#34; or &amp;#34;lang=zh-hant-*&amp;#34; --&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;match&lt;/span> &lt;span class="na">target=&lt;/span>&lt;span class="s">&amp;#34;pattern&amp;#34;&lt;/span>&lt;span class="nt">&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;test&lt;/span> &lt;span class="na">name=&lt;/span>&lt;span class="s">&amp;#34;lang&amp;#34;&lt;/span> &lt;span class="na">compare=&lt;/span>&lt;span class="s">&amp;#34;contains&amp;#34;&lt;/span>&lt;span class="nt">&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;string&amp;gt;&lt;/span>zh-hant&lt;span class="nt">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/test&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;test&lt;/span> &lt;span class="na">name=&lt;/span>&lt;span class="s">&amp;#34;family&amp;#34;&lt;/span>&lt;span class="nt">&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;string&amp;gt;&lt;/span>serif&lt;span class="nt">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/test&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;edit&lt;/span> &lt;span class="na">name=&lt;/span>&lt;span class="s">&amp;#34;family&amp;#34;&lt;/span> &lt;span class="na">mode=&lt;/span>&lt;span class="s">&amp;#34;append&amp;#34;&lt;/span> &lt;span class="na">binding=&lt;/span>&lt;span class="s">&amp;#34;strong&amp;#34;&lt;/span>&lt;span class="nt">&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;string&amp;gt;&lt;/span>Noto Serif CJK TC&lt;span class="nt">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/edit&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/match&amp;gt;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>此规则是当提供了 &lt;code>lang&lt;/code> 属性时选择的字形变体，匹配 &lt;code>zh-hant&lt;/code> 或 &lt;code>zh-hant-*&lt;/code> （忽略大小写）。&lt;/p>
+&lt;p>放置在后面则可以&lt;strong>覆盖&lt;/strong>上面所配置的 CJK 字符默认值。&lt;/p>
+&lt;h4 id="常见的-lang-属性">常见的 &lt;code>lang&lt;/code> 属性&lt;/h4>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">Chinese&lt;/th>
+&lt;th style="text-align:center">Japanese&lt;/th>
+&lt;th style="text-align:center">Korean&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">&lt;code>zh&lt;/code>&lt;/td>
+&lt;td style="text-align:center">&lt;code>ja&lt;/code>&lt;/td>
+&lt;td style="text-align:center">&lt;code>ko&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">&lt;code>zh-CN&lt;/code>&lt;/td>
+&lt;td style="text-align:center">&lt;code>ja-jp&lt;/code>&lt;/td>
+&lt;td style="text-align:center">&lt;code>ko-kr&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">&lt;code>zh-TW&lt;/code>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">&lt;code>zh-HK&lt;/code>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">&lt;code>zh-Hans&lt;/code>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">&lt;code>zh-Hant&lt;/code>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">&lt;code>zh-Hant-HK&lt;/code>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="emoji--54-emojiconf">Emoji 😆 &lt;code>54-emoji.conf&lt;/code>&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-xml" data-lang="xml">&lt;span class="nt">&amp;lt;match&lt;/span> &lt;span class="na">target=&lt;/span>&lt;span class="s">&amp;#34;pattern&amp;#34;&lt;/span>&lt;span class="nt">&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;test&lt;/span> &lt;span class="na">name=&lt;/span>&lt;span class="s">&amp;#34;family&amp;#34;&lt;/span>&lt;span class="nt">&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;string&amp;gt;&lt;/span>serif&lt;span class="nt">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/test&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;edit&lt;/span> &lt;span class="na">name=&lt;/span>&lt;span class="s">&amp;#34;family&amp;#34;&lt;/span> &lt;span class="na">mode=&lt;/span>&lt;span class="s">&amp;#34;append_last&amp;#34;&lt;/span> &lt;span class="na">binding=&lt;/span>&lt;span class="s">&amp;#34;strong&amp;#34;&lt;/span>&lt;span class="nt">&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;string&amp;gt;&lt;/span>Noto Color Emoji&lt;span class="nt">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/edit&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/match&amp;gt;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这条规则是将 Emoji 字体放置于后备字体列表的末尾。当然，它依然&lt;strong>优先于&lt;/strong>其他没有在配置文件中列出的字体。&lt;/p>
+&lt;h2 id="测试">测试&lt;/h2>
+&lt;p>我们可以使用 &lt;code>fc-match&lt;/code> 来测试 Fontconfig。&lt;/p>
+&lt;p>按照 &lt;a class="link" href="https://gist.github.com/akiirui/b3f36e8bdf9a9f5636a98113960bc7f4" target="_blank" rel="noopener"
+>Gist &amp;gt; Customize Fontconfig&lt;/a> 的配置，最终的结果如下。&lt;/p>
+&lt;p>&lt;figure style="flex-grow: 156; flex-basis: 375px">
+&lt;a href="https://blog.akii.art/p/fontconfig-for-cjk/fc-match.png" data-size="1148x733">&lt;img src="https://blog.akii.art/p/fontconfig-for-cjk/fc-match.png"
+srcset="https://blog.akii.art/p/fontconfig-for-cjk/fc-match_hu9c481fc7ab9e8063f63830a8e71055e0_127174_480x0_resize_box_2.png 480w, https://blog.akii.art/p/fontconfig-for-cjk/fc-match_hu9c481fc7ab9e8063f63830a8e71055e0_127174_1024x0_resize_box_2.png 1024w"
+width="1148"
+height="733"
+loading="lazy"
+>
+&lt;/a>
+&lt;/figure>&lt;/p>
+&lt;p>你可能会发现最后一个测试 &lt;code>lang=zh&lt;/code> 居然匹配到了 &lt;strong>HK&lt;/strong> 字形？这可能是 &lt;code>fc-match&lt;/code> 的 Bug ，实际使用时会正常匹配到 &lt;strong>SC&lt;/strong> 字形。&lt;/p>
+&lt;h2 id="最后">最后&lt;/h2>
+&lt;p>虽然配置 Fontconfig 可以几乎完美的达成需求，但是在某些不遵循 Fontconfig 的应用程序中就无可奈何了。&lt;/p>
+&lt;blockquote>
+&lt;p>Chromium 系&lt;/p>
+&lt;p>Chromium 只在 UI 字体上遵循 Fontconfig，并且 CJK 的后备字体是硬编码的。你只有使用 &lt;a class="link" href="https://chrome.google.com/webstore/detail/caclkomlalccbpcdllchkeecicepbmbm" target="_blank" rel="noopener"
+>Advanced Font Settings&lt;/a> 来设置每种语言标签的字体。&lt;/p>
+&lt;/blockquote>
+&lt;p>还好 Linux 下大多数应用都遵循了 Fontconfig 。立即转投 Firefox 吧！&lt;/p></description></item><item><title>Hello, Hugo!</title><link>https://blog.akii.art/p/hello-hugo/</link><pubDate>Fri, 26 Mar 2021 15:04:08 +0800</pubDate><guid>https://blog.akii.art/p/hello-hugo/</guid><description>&lt;img src="https://blog.akii.art/p/hello-hugo/cover.png" alt="Featured image of post Hello, Hugo!" />&lt;p>多年之前曾经创建过一个小站，不过因为种种原因荒废掉了。&lt;/p>
+&lt;p>域名也因为没有续费被回收。&lt;del>（随后被人注册，成了一个奇奇怪怪的广告站）&lt;/del>&lt;/p>
+&lt;p>并且所有数据都在我某次清理时全部删除了。&lt;/p>
+&lt;p>最近热血来潮又重新创建这个小站。&lt;/p>
+&lt;p>打算记录一些笔记什么的，除了这些，我这个「真・潜水党」也没啥别的好写了。&lt;/p>
+&lt;p>不过也没人看就对了～ 😅&lt;/p>
+&lt;p>最后。你好，Hugo！&lt;/p></description></item></channel></rss>
